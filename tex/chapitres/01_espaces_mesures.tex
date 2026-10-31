@@ -1,0 +1,81 @@
+\chapter{Measure Spaces}
+
+This chapter lays the measure-theoretic foundation required to build the Itô integral. 
+While standard texts like Le Gall focus heavily on pure mathematical rigor, our goal here is dual : 
+to preserve that formal architecture while bridging the gap toward quantitative intuition. 
+Before we can price a derivative or simulate a stochastic process in Python, we must first rigorously define the space of possible events and how we measure them.
+
+\begin{quote}
+\itshape
+``The starting idea of measure theory is to assign a non-negative real number (the measure of this subset) to each subset of a given set, in a way that satisfies certain natural additivity properties (the measure of a disjoint union must be the sum of the measures). 
+
+For deep reasons, it is generally not possible to define the measure of any arbitrary subset, and one must restrict to a certain class of subsets, called \textbf{measurable sets}; a set equipped with a $\sigma$-algebra is called a \textbf{measurable space}.''
+\hfill --- J.-F.~Le Gall~\cite{legall2006}
+\end{quote}
+
+% ========================================================================================================================================================================================================================================================================
+
+
+% ========================================================================================================================================================================================================================================================================
+
+\section{Measurable Sets and $\sigma$-Algebras}
+
+\begin{definition}{$\sigma$-Algebra}{sigma_algebra}
+Let $E$ be a set. 
+A collection $\mathcal{A}$ of subsets of $E$ is called a \textbf{$\sigma$-algebra} on $E$ if:
+\begin{enumerate}[label=(\textbf{\roman*})]
+    \item \textbf{Certain Event :} $E \in \mathcal{A}$ ;
+    \item \textbf{Closed under Complementation :} $A \in \mathcal{A} \implies A^c \in \mathcal{A}$ ;
+    \item \textbf{Closed under Countable Unions :} If $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$, then $\bigcup_{n \in \mathbb{N}} A_n \in \mathcal{A}$.
+\end{enumerate}
+\end{definition}
+
+Integration relies on the passage to the limit.  
+We need to sum an infinite number of small pieces to perform limit calculations.
+The elements of $\mathcal{A}$ are called measurable sets, or $\mathcal{A}$-measurable sets if there is any ambiguity.
+We say that $(E, \mathcal{A})$ is a \textbf{measurable space}.
+
+\begin{insight}[$\sigma$-algebra definition]
+\end{insight}
+
+\begin{insight}[Intuition: $\sigma$-Algebras as Information Resolution]
+Think of a $\sigma$-algebra $\mathcal{F}$ as the \textbf{resolution of an image} representing the market:
+\begin{itemize}
+    \item \textbf{Coarse resolution (Little Information):} If $\mathcal{F} = \{\emptyset, \Omega\}$, the image is completely pixelated into a single block. You only know that "something will happen" ($\Omega$), but you cannot distinguish any specific outcome.
+    \item \textbf{Finer resolution (More Information):} As price observations arrive, the image sharpens. The set $\Omega$ is partitioned into smaller subsets. An event $A \in \mathcal{F}$ means your current resolution is sharp enough to tell whether the true state of the world lies inside $A$ or not.
+\end{itemize}
+In financial modeling, a \textbf{filtration} $(\mathcal{F}_t)_{t \ge 0}$ is simply a movie where the picture becomes clearer as time $t$ progresses.
+\end{insight}
+
+\begin{insight}[Intuition: $\sigma$-Algebras as Decidable Payoffs]
+Mathematically, an event $A \subseteq \Omega$ belongs to $\mathcal{F}$ if and only if, given our current information, we can answer the question with certainty: \emph{"Did event $A$ occur?"}
+
+In quantitative finance, if a derivative contract pays $\$1$ when $A$ occurs and $\$0$ otherwise, the contract can only be settled at time $t$ if $A \in \mathcal{F}_t$. If $A \notin \mathcal{F}_t$, the market does not yet possess enough information to determine the payoff.
+\end{insight}
+
+\section{Integration \& Limit Theorems}
+
+\begin{theorem}{Lebesgue's Dominated Convergence Theorem}{dct}
+Let $(X_n)_{n \ge 0}$ be a sequence of random variables on $(\Omega, \mathscr{F}, \mathbb{P})$. Assume that:
+\begin{itemize}
+    \item $X_n \to X$ almost surely as $n \to \infty$.
+    \item There exists a non-negative random variable $Y \in L^1(\mathbb{P})$ such that $|X_n| \le Y$ a.s. for all $n \ge 0$.
+\end{itemize}
+Then $X \in L^1(\mathbb{P})$ and:
+\[
+\lim_{n \to \infty} \mathbb{E}[X_n] = \mathbb{E}[X]
+\]
+\end{theorem}
+
+\begin{proof}
+The proof relies on applying Fatou's Lemma to the non-negative sequence $Y + X_n \ge 0$ and $Y - X_n \ge 0$.
+\end{proof}
+
+
+\begin{example}{Borel $\sigma$-Algebra}{borel_algebra}
+Let $\Omega = \mathbb{R}$ with the usual Euclidean topology. The Borel $\sigma$-algebra $\mathscr{B}(\mathbb{R})$ is the $\sigma$-algebra generated by all open sets of $\mathbb{R}$.
+\end{example}
+
+\begin{insight}[Why Borel sets?]
+We want to measure probabilities of intervals (like a stock price falling between 100 and 110). The Borel $\sigma$-algebra is simply the mathematical safety net that ensures we don't accidentally create unmeasurable "monster" sets when taking unions and intersections of these intervals.
+\end{insight}
