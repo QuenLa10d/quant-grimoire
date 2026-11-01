@@ -35,47 +35,80 @@ We need to sum an infinite number of small pieces to perform limit calculations.
 The elements of $\mathcal{A}$ are called measurable sets, or $\mathcal{A}$-measurable sets if there is any ambiguity.
 We say that $(E, \mathcal{A})$ is a \textbf{measurable space}.
 
-\begin{insight}[$\sigma$-algebra definition]
-\end{insight}
-
-\begin{insight}[Intuition: $\sigma$-Algebras as Information Resolution]
-Think of a $\sigma$-algebra $\mathcal{F}$ as the \textbf{resolution of an image} representing the market:
+\begin{insight}[Intuition on $\sigma$-algebras]
+    The definition of a $\sigma$-algebra reflects three basic physical and logical constraints on what we can measure:
 \begin{itemize}
-    \item \textbf{Coarse resolution (Little Information):} If $\mathcal{F} = \{\emptyset, \Omega\}$, the image is completely pixelated into a single block. You only know that "something will happen" ($\Omega$), but you cannot distinguish any specific outcome.
-    \item \textbf{Finer resolution (More Information):} As price observations arrive, the image sharpens. The set $\Omega$ is partitioned into smaller subsets. An event $A \in \mathcal{F}$ means your current resolution is sharp enough to tell whether the true state of the world lies inside $A$ or not.
+    \item \textbf{Measuring the whole space :} We must be able to measure the total size of our universe ($\Omega \in \mathcal{A}$).
+    \item \textbf{Measuring the rest :} If we know how to measure an event $A \in \mathcal{F}$, we must automatically know how to measure "everything else". The measure of the complement $A^c$ is simply the measure of the total space minus that of $A$:
+    \[
+        \mu(A^c) = \mu(E) - \mu(A)
+    \]
+    Thus, $\mathcal{F}$ must be closed under complementation.
+    \item \textbf{Passage to the limit :} Since analysis relies on continuous limits, if we can measure a sequence of individual events $(A_n)_{n \in \mathbb{N}}$, we must also be able to measure their combined occurrence ($\bigcup_{n=0}^\infty A_n \in \mathcal{A}$).
 \end{itemize}
-In financial modeling, a \textbf{filtration} $(\mathcal{F}_t)_{t \ge 0}$ is simply a movie where the picture becomes clearer as time $t$ progresses.
 \end{insight}
 
-\begin{insight}[Intuition: $\sigma$-Algebras as Decidable Payoffs]
-Mathematically, an event $A \subseteq \Omega$ belongs to $\mathcal{F}$ if and only if, given our current information, we can answer the question with certainty: \emph{"Did event $A$ occur?"}
-
-In quantitative finance, if a derivative contract pays $\$1$ when $A$ occurs and $\$0$ otherwise, the contract can only be settled at time $t$ if $A \in \mathcal{F}_t$. If $A \notin \mathcal{F}_t$, the market does not yet possess enough information to determine the payoff.
-\end{insight}
-
-\section{Integration \& Limit Theorems}
-
-\begin{theorem}{Lebesgue's Dominated Convergence Theorem}{dct}
-Let $(X_n)_{n \ge 0}$ be a sequence of random variables on $(\Omega, \mathscr{F}, \mathbb{P})$. Assume that:
-\begin{itemize}
-    \item $X_n \to X$ almost surely as $n \to \infty$.
-    \item There exists a non-negative random variable $Y \in L^1(\mathbb{P})$ such that $|X_n| \le Y$ a.s. for all $n \ge 0$.
-\end{itemize}
-Then $X \in L^1(\mathbb{P})$ and:
-\[
-\lim_{n \to \infty} \mathbb{E}[X_n] = \mathbb{E}[X]
-\]
-\end{theorem}
+\begin{property}{Immediate Properties of $\sigma$-Algebras}{sigma_prop}
+    Let $\mathcal{A}$ be a $\sigma$-algebra on a set $E$. The definition implies the following properties:
+\begin{enumerate}
+    \item \textbf{Empty Set :} The empty set belongs to the collection :
+    \[
+        \emptyset \in \mathcal{A}
+    \]
+    \item \textbf{Closure under Countable Intersections :} If $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$, then their intersection is also measurable :
+    \[
+        \bigcap_{n \in \mathbb{N}} A_n \in \mathcal{A}
+    \]
+    \item \textbf{Closure under Finite Operations :} By choosing $A_n = \emptyset$ (or $A_n = E$) for all $n$ beyond a certain index, condition (iii) implies that $\mathcal{F}$ is automatically closed under \textbf{finite} unions and \textbf{finite} intersections.
+\end{enumerate}
+\end{property}
 
 \begin{proof}
-The proof relies on applying Fatou's Lemma to the non-negative sequence $Y + X_n \ge 0$ and $Y - X_n \ge 0$.
+We prove each assertion sequentially using axioms (i), (ii), and (iii) of a $\sigma$-algebra :
+
+\begin{enumerate}
+    \item
+    By axiom (i), the full space belongs to the collection ($E \in \mathcal{A}$). Applying axiom (ii), its complement must also belong to $\mathcal{A}$, so $E^c \in \mathcal{A}$. Since $E^c = \emptyset$, we directly conclude that :
+    \[
+        \emptyset \in \mathcal{A}
+    \]
+
+    \item
+    Let $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ be a sequence of measurable sets.
+    \begin{itemize}
+        \item By axiom (ii), their complements are also measurable : $A_n^c \in \mathcal{A}$ for all $n \in \mathbb{N}$.
+        \item By axiom (iii), the countable union of these complements is measurable : $\bigcup_{n \in \mathbb{N}} A_n^c \in \mathcal{A}$.
+        \item Applying axiom (ii) again, the complement of this union is in $\mathcal{A}$ :
+        \[
+            \left( \bigcup_{n \in \mathbb{N}} A_n^c \right)^c \in \mathcal{A}
+        \]
+    \end{itemize}
+    By De Morgan's laws, we have $\left( \bigcup_{n \in \mathbb{N}} A_n^c \right)^c = \bigcap_{n \in \mathbb{N}} (A_n^c)^c = \bigcap_{n \in \mathbb{N}} A_n$. Thus :
+    \[
+        \bigcap_{n \in \mathbb{N}} A_n \in \mathcal{A}
+    \]
+
+    \item
+    Let $p \in \mathbb{N}^*$ and let $A_1, \dots, A_p \in \mathcal{A}$. We construct an infinite sequence $(A_n)_{n \in \mathbb{N}}$ by padding with empty sets :
+    \[
+        \forall n > p,\quad  A_n = \emptyset 
+    \]
+    Since $\emptyset \in \mathcal{A}$, all elements of the sequence $(A_1, \dots, A_p, \emptyset, \emptyset, \dots)$ belong to $\mathcal{A}$. By axiom (iii), the countable union is in $\mathcal{A}$:
+    \[
+        \bigcup_{n \in \mathbb{N}} A_n = \left( \bigcup_{i=1}^p A_i \right) \cup \left( \bigcup_{n > p} \emptyset \right) = \left( \bigcup_{i=1}^p A_i \right) \cup \emptyset = \bigcup_{i=1}^p A_i
+    \]
+    Therefore, $\bigcup_{i=1}^p A_i \in \mathcal{A}$. By taking complements and using De Morgan's laws again, finite intersections $\bigcap_{i=1}^p A_i \in \mathcal{A}$ follow immediately.
+\end{enumerate}
 \end{proof}
 
-
-\begin{example}{Borel $\sigma$-Algebra}{borel_algebra}
-Let $\Omega = \mathbb{R}$ with the usual Euclidean topology. The Borel $\sigma$-algebra $\mathscr{B}(\mathbb{R})$ is the $\sigma$-algebra generated by all open sets of $\mathbb{R}$.
+\begin{example}{The Discrete/Maximal $\sigma$-Algebra}{discrete_algebra}
+Let $E$ be a non-empty set. The power set $\mathcal{P}(E)$, which contains all subsets of $E$, forms the maximal (or discrete) $\sigma$-algebra $\mathcal{A} = \mathcal{P}(E)$ on $E$.
 \end{example}
 
-\begin{insight}[Why Borel sets?]
-We want to measure probabilities of intervals (like a stock price falling between 100 and 110). The Borel $\sigma$-algebra is simply the mathematical safety net that ensures we don't accidentally create unmeasurable "monster" sets when taking unions and intersections of these intervals.
-\end{insight}
+\paragraph{Verification.}
+To check that $\mathcal{P}(E)$ is indeed a $\sigma$-algebra :
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Entire Space :} By definition, $E \in \mathcal{P}(E)$.
+    \item \textbf{Closure under Complements :} If $A \in \mathcal{P}(E)$, then $A \subseteq E$, so $A^c = E \setminus A \subseteq E$, which implies $A^c \in \mathcal{P}(E)$.
+    \item \textbf{Closure under Countable Unions :} If $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{P}(E)$, their union $\bigcup_{n \in \mathbb{N}} A_n$ remains a subset of $E$, hence $\bigcup_{n \in \mathbb{N}} A_n \in \mathcal{P}(E)$.
+\end{enumerate}

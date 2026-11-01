@@ -85,6 +85,16 @@
     boxed title style={colback=blue!10!white, size=small, boxrule=0pt}
 }{ex}
 
+% --- Property / Proposition Box (Teal / Sapphire Blue) ---
+\newtcbtheorem[number within=section]{property}{Property}{
+    quantbox,
+    colback=teal!4!white,
+    colframe=teal!60!black,
+    coltitle=white,
+    fonttitle=\bfseries,
+    after skip=1.2em
+}{prop}
+
 % Environnement Remark discret
 \tcbset{
     remarkbox/.style={
