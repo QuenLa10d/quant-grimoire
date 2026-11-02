@@ -46,7 +46,9 @@
     colback=green!3!white,
     colframe=green!45!black,
     coltitle=green!50!black,
-    boxed title style={colback=green!10!white, size=small, boxrule=0pt}
+    boxed title style={colback=green!10!white, size=small, boxrule=0pt},
+    before skip=3em,
+    after skip=3em
 }{def}
 
 % 2. Theorems (Rouge)
@@ -55,16 +57,20 @@
     colback=red!3!white,
     colframe=red!60!black,
     coltitle=red!65!black,
-    boxed title style={colback=red!10!white, size=small, boxrule=0pt}
+    boxed title style={colback=red!10!white, size=small, boxrule=0pt},
+    before skip=3em,
+    after skip=3em
 }{thm}
 
-% 3. Propositions (Orange)
+% 3. Propositions (magenta)
 \newtcbtheorem[use counter from=definition]{proposition}{Proposition}{
     quantbox,
-    colback=orange!3!white,
-    colframe=orange!60!black,
-    coltitle=orange!60!black,
-    boxed title style={colback=orange!10!white, size=small, boxrule=0pt}
+    colback=magenta!3!white,
+    colframe=magenta!60!black,
+    coltitle=magenta!60!black,
+    boxed title style={colback=magenta!10!white, size=small, boxrule=0pt},
+    before skip=3em,
+    after skip=3em
 }{prop}
 
 % 4. Lemmas (Violet)
@@ -73,7 +79,9 @@
     colback=purple!3!white,
     colframe=purple!50!black,
     coltitle=purple!50!black,
-    boxed title style={colback=purple!10!white, size=small, boxrule=0pt}
+    boxed title style={colback=purple!10!white, size=small, boxrule=0pt},
+    before skip=3em,
+    after skip=3em
 }{lem}
 
 % 5. Examples (Bleu)
@@ -82,7 +90,9 @@
     colback=blue!3!white,
     colframe=blue!50!black,
     coltitle=blue!55!black,
-    boxed title style={colback=blue!10!white, size=small, boxrule=0pt}
+    boxed title style={colback=blue!10!white, size=small, boxrule=0pt},
+    before skip=3em,
+    after skip=3em
 }{ex}
 
 % --- Property / Proposition Box (Teal / Sapphire Blue) ---
@@ -92,7 +102,8 @@
     colframe=teal!60!black,
     coltitle=white,
     fonttitle=\bfseries,
-    after skip=1.2em
+    before skip=3em,
+    after skip=3em
 }{prop}
 
 % Environnement Remark discret
@@ -118,5 +129,7 @@
     colframe=orange!80!black,
     coltitle=white,
     title={{\color{yellow!80!white}\faLightbulb}~Grimoire Insight\ifx&#1&\else: #1\fi},
-    boxed title style={colback=orange!80!black, size=small, boxrule=0pt}
+    boxed title style={colback=orange!80!black, size=small, boxrule=0pt},
+    before skip=3em,
+    after skip=3em
 }

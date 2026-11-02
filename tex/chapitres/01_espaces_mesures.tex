@@ -1,4 +1,4 @@
-\chapter{Measure Spaces}
+\chapter{Measurable Spaces}
 
 This chapter lays the measure-theoretic foundation required to build the Itô integral. 
 While standard texts like Le Gall focus heavily on pure mathematical rigor, our goal here is dual : 
@@ -13,12 +13,12 @@ For deep reasons, it is generally not possible to define the measure of any arbi
 \hfill --- J.-F.~Le Gall~\cite{legall2006}
 \end{quote}
 
-% ========================================================================================================================================================================================================================================================================
-
-
-% ========================================================================================================================================================================================================================================================================
-
 \section{Measurable Sets and $\sigma$-Algebras}
+
+% =================================================================
+% DEF 1.1 - SIGMA-ALGEBRA 
+% =================================================================
+
 
 \begin{definition}{$\sigma$-Algebra}{sigma_algebra}
 Let $E$ be a set. 
@@ -35,6 +35,11 @@ We need to sum an infinite number of small pieces to perform limit calculations.
 The elements of $\mathcal{A}$ are called measurable sets, or $\mathcal{A}$-measurable sets if there is any ambiguity.
 We say that $(E, \mathcal{A})$ is a \textbf{measurable space}.
 
+% =================================================================
+% INSIGHT 1: INTUITION ON SIGMA-ALGEBRA 
+% =================================================================
+
+
 \begin{insight}[Intuition on $\sigma$-algebras]
     The definition of a $\sigma$-algebra reflects three basic physical and logical constraints on what we can measure:
 \begin{itemize}
@@ -47,6 +52,11 @@ We say that $(E, \mathcal{A})$ is a \textbf{measurable space}.
     \item \textbf{Passage to the limit :} Since analysis relies on continuous limits, if we can measure a sequence of individual events $(A_n)_{n \in \mathbb{N}}$, we must also be able to measure their combined occurrence ($\bigcup_{n=0}^\infty A_n \in \mathcal{A}$).
 \end{itemize}
 \end{insight}
+
+% =================================================================
+% PROPERTY 1.1.1: IMMEDIATE PROPERTIES OF SIGMA-ALGEBRAS
+% =================================================================
+
 
 \begin{property}{Immediate Properties of $\sigma$-Algebras}{sigma_prop}
     Let $\mathcal{A}$ be a $\sigma$-algebra on a set $E$. The definition implies the following properties:
@@ -101,7 +111,12 @@ We prove each assertion sequentially using axioms (i), (ii), and (iii) of a $\si
 \end{enumerate}
 \end{proof}
 
-\begin{example}{The Discrete/Maximal $\sigma$-Algebra}{discrete_algebra}
+% =================================================================
+% EXAMPLE 1.2 : THE MAXIMAL SIGMA-ALGEBRA 
+% =================================================================
+
+
+\begin{example}{The Discrete (Maximal) $\sigma$-Algebra}{discrete_algebra}
 Let $E$ be a non-empty set. The power set $\mathcal{P}(E)$, which contains all subsets of $E$, forms the maximal (or discrete) $\sigma$-algebra $\mathcal{A} = \mathcal{P}(E)$ on $E$.
 \end{example}
 
@@ -110,5 +125,664 @@ To check that $\mathcal{P}(E)$ is indeed a $\sigma$-algebra :
 \begin{enumerate}[label=(\roman*)]
     \item \textbf{Entire Space :} By definition, $E \in \mathcal{P}(E)$.
     \item \textbf{Closure under Complements :} If $A \in \mathcal{P}(E)$, then $A \subseteq E$, so $A^c = E \setminus A \subseteq E$, which implies $A^c \in \mathcal{P}(E)$.
-    \item \textbf{Closure under Countable Unions :} If $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{P}(E)$, their union $\bigcup_{n \in \mathbb{N}} A_n$ remains a subset of $E$, hence $\bigcup_{n \in \mathbb{N}} A_n \in \mathcal{P}(E)$.
+    \item \textbf{Closure under Countable Unions :} If $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{P}(E)$, their union $\bigcup_{n \in \mathbb{N}} A_n$ remains a subset of $E$, hence $\bigcup_{n \in \mathbb{N}} A_n \in \mathcal{P}(E)$.\qed
 \end{enumerate}
+
+\vspace{1em}
+
+% =================================================================
+% EXAMPLE 1.3 : THE MINIMAL SIGMA-ALGEBRA 
+% =================================================================
+
+\begin{example}{The Trivial (Minimal) $\sigma$-Algebra}{trivial_algebra}
+Let $E$ be a non-empty set. The collection $\mathcal{A} = \{\emptyset, E\}$, consisting only of the empty set and the entire space, forms the minimal (or trivial) $\sigma$-algebra on $E$.
+\end{example}
+
+\paragraph{Verification.}
+To check that $\mathcal{A} = \{\emptyset, E\}$ satisfies the three axioms :
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Entire Space :} By definition, $E \in \{\emptyset, E\}$.
+    \item \textbf{Closure under Complements :} 
+    \begin{itemize}
+        \item If $A = \emptyset$, then $A^c = E \setminus \emptyset = E \in \{\emptyset, E\}$.
+        \item If $A = E$, then $A^c = E \setminus E = \emptyset \in \{\emptyset, E\}$.
+    \end{itemize}
+    In both cases, $A^c \in \mathcal{A}$.
+    \item \textbf{Closure under Countable Unions :} Let $(A_n)_{n \in \mathbb{N}} \subseteq \{\emptyset, E\}$.
+    \begin{itemize}
+        \item If $A_n = \emptyset$ for all $n \in \mathbb{N}$, then $\bigcup_{n \in \mathbb{N}} A_n = \emptyset \in \mathcal{A}$.
+        \item If there exists at least one $n_0$ such that $A_{n_0} = E$, then $\bigcup_{n \in \mathbb{N}} A_n = E \in \mathcal{A}$.
+    \end{itemize}
+    Thus, $\bigcup_{n \in \mathbb{N}} A_n \in \{\emptyset, E\}$.\qed
+\end{enumerate}
+
+\vspace{1em}
+
+% =================================================================
+% EXAMPLE 1.4 : THE COUNTABLE SIGMA-ALGEBRA 
+% =================================================================
+
+\begin{example}{The Countable / Co-Countable $\sigma$-Algebra}{cocountable_algebra}
+Let $E$ be a non-empty set. The collection of subsets whose element or complement is at most countable:
+\[
+    \mathcal{A} = \{ A \subseteq E \mid A \text{ is at most countable or } A^c \text{ is at most countable} \}
+\]
+forms a $\sigma$-algebra on $E$.
+\end{example}
+
+\paragraph{Verification.}
+We check the three axioms for $\mathcal{A}$ :
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Entire Space :} The complement of the whole space is $E^c = \emptyset$. Since the empty set $\emptyset$ is finite (hence at most countable), it follows that $E \in \mathcal{A}$.
+    \item \textbf{Closure under Complements :} Let $A \in \mathcal{A}$. By definition, either $A$ or $A^c$ is at most countable. Since $(A^c)^c = A$, the condition for $A^c$ being in $\mathcal{A}$ is symmetric, so $A^c \in \mathcal{A}$.
+    \item \textbf{Closure under Countable Unions :} Let $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ and define $S = \bigcup_{n \in \mathbb{N}} A_n$.
+    \begin{itemize}
+        \item \textbf{Case 1 - All $A_n$ are at most countable :} A countable union of at most countable sets is at most countable. Thus $S$ is at most countable, so $S \in \mathcal{A}$.
+        \item \textbf{Case 2 - At least one $A_k$ has a countable complement :} Suppose there exists some index $k \in \mathbb{N}$ such that $A_k$ is not at most countable. Since $A_k \in \mathcal{A}$, its complement $A_k^c$ must be at most countable. Using De Morgan's laws:
+        \[
+            S^c = \left( \bigcup_{n \in \mathbb{N}} A_n \right)^c = \bigcap_{n \in \mathbb{N}} A_n^c \subseteq A_k^c.
+        \]
+        Since $S^c$ is a subset of the at most countable set $A_k^c$, $S^c$ is itself at most countable. Therefore, $S \in \mathcal{A}$.
+    \end{itemize}
+    Thus, $\mathcal{A}$ is closed under countable unions.\qed
+\end{enumerate}
+
+% =================================================================
+% DEFINITION 1.5 : GENERATED SIGMA-ALGEBRA 
+% =================================================================
+
+\begin{definition}{Generated $\sigma$-Algebra}{generated sigma-algebra}
+Let $E$ be a non-empty set and let $\mathcal{C} \subseteq \mathcal{P}(E)$ be a collection of subsets of $E$. There exists a unique smallest $\sigma$-algebra on $E$ containing $\mathcal{C}$, denoted by $\sigma(\mathcal{C})$ and called the \textbf{$\sigma$-algebra generated by $\mathcal{C}$}.
+
+Formally, it is defined as the intersection of all $\sigma$-algebras on $E$ that contain $\mathcal{C}$ :
+\[
+    \sigma(\mathcal{C}) = \bigcap_{\substack{\mathcal{A} \text{ is a } \sigma\text{-algebra on } E \\ \mathcal{C} \subseteq \mathcal{A}}} \mathcal{A}
+\]
+\end{definition}
+
+% =================================================================
+% INSIGHT : FORCING THE AXIOMS OF MEASURE THEORY 
+% =================================================================
+
+\begin{insight}["Forcing" the Axioms of Measure Theory]
+Suppose we need a $\sigma$-algebra that contains a specific collection of events $\mathcal{C}$ (e.g., asset price intervals or option payoffs). However, $\mathcal{C}$ itself rarely satisfies the three axioms of a $\sigma$-algebra.\vspace{1em} 
+To transform $\mathcal{C}$ into a valid $\sigma$-algebra without adding unnecessary information, we "force" the rules : we take the intersection of every existing $\sigma$-algebra that contains $\mathcal{C}$. Since the intersection of any family of $\sigma$-algebras is itself a $\sigma$-algebra, this construction yields the most minimal, economical structure containing $\mathcal{C}$.
+\end{insight}
+
+\vspace{0em}
+
+% =================================================================
+% DEFINITION 1.6 : BOREL SIGMA-ALGEBRA 
+% =================================================================
+
+\begin{definition}{Borel $\sigma$-Algebra}{borel sigma-algebra}
+Let $(E, \mathcal{O})$ be a topological space, where $\mathcal{O}$ denotes the collection of open sets in $E$. The \textbf{Borel $\sigma$-algebra} on $E$, denoted by $\mathcal{B}(E)$, is the $\sigma$-algebra generated by all open sets of $E$ :
+\[
+    \mathcal{B}(E) = \sigma(\mathcal{O})
+\]
+The elements of $\mathcal{B}(E)$ are called the \textbf{Borel sets} (or \textbf{Borelians}) of $E$.
+\end{definition}
+
+% =================================================================
+% INSIGHT : REMINDER ON TOPOLOGICAL SPACES
+% =================================================================
+
+\begin{insight}[Reminder - Topological Spaces]
+Recall that a topological space is a pair $(E, \mathcal{O})$ where $E$ is a set and $\mathcal{O} \subseteq \mathcal{P}(E)$ is a topology (the collection of "open sets") equipping $E$ with notions of distance, limits, and continuity. The collection $\mathcal{O}$ satisfies :
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Finite Intersections :} Any finite intersection of elements in $\mathcal{O}$ belongs to $\mathcal{O}$.
+    \item \textbf{Arbitrary Unions :} Any union (finite or infinite) of elements in $\mathcal{O}$ belongs to $\mathcal{O}$.
+    \item \textbf{Extremes :} The empty set $\emptyset$ and the full space $E$ belong to $\mathcal{O}$.
+\end{enumerate}
+In quantitative finance and stochastic calculus, whenever $E$ is endowed with a topology (such as $\mathbb{R}$ or $\mathbb{R}^d$ equipped with standard Euclidean metrics), it is implicitly assumed to be equipped with its Borel $\sigma$-algebra $\mathcal{B}(E)$.
+\end{insight}
+
+% =================================================================
+% EXAMPLE 1.7 : BOREL SIGMA-ALGEBRA GENERATED BY OPEN INTERVALS
+% =================================================================
+
+\begin{example}{Borel $\sigma$-Algebra and Open Intervals}{borel_open_intervals}
+The Borel $\sigma$-algebra on $\mathbb{R}$ is generated by the collection of open intervals :
+\[
+    \mathcal{B}(\mathbb{R}) = \sigma\Big( \big\{ ]a, b[ \;\mid\; a, b \in \mathbb{R},\, a < b \big\} \Big)
+\]
+\end{example}
+
+\paragraph{Methodology - Proof by Double Inclusion.}
+To prove that two generated $\sigma$-algebras are equal, $\sigma(\mathcal{C}_1) = \sigma(\mathcal{C}_2)$, it suffices to show that $\mathcal{C}_1 \subseteq \sigma(\mathcal{C}_2)$ and $\mathcal{C}_2 \subseteq \sigma(\mathcal{C}_1)$. By definition of the smallest containing $\sigma$-algebra, this immediately implies $\sigma(\mathcal{C}_1) = \sigma(\mathcal{C}_2)$.
+
+\begin{enumerate}[label= \textbf{§}]
+    \item \textbf{First Inclusion - $\sigma\big(\{]a, b[\}\big) \subseteq \mathcal{B}(\mathbb{R})$ :} 
+    Every open interval $]a, b[$ is, by definition, an open set of $\mathbb{R}$. Since $\mathcal{B}(\mathbb{R})$ is the smallest $\sigma$-algebra containing all open sets of $\mathbb{R}$, it necessarily contains all open intervals :
+    \[
+        \{ ]a, b[ \;\mid\; a < b \} \subseteq \mathcal{B}(\mathbb{R}) \implies \sigma\Big( \big\{ ]a, b[ \big\} \Big) \subseteq \mathcal{B}(\mathbb{R})
+    \]
+
+    \item \textbf{Second Inclusion - $\mathcal{B}(\mathbb{R}) \subseteq \sigma\big(\{]a, b[\}\big)$ :} 
+    We must show that any open set of $\mathbb{R}$ can be constructed using open intervals $]a, b[$. A fundamental result in topology states that \emph{every open set of $\mathbb{R}$ can be written as a countable union of disjoint open intervals}.
+    
+    Since $\sigma\big(\{]a, b[\}\big)$ contains all open intervals and is closed under countable unions, it necessarily contains every open set of $\mathbb{R}$. Let $\mathcal{O}$ be the collection of open sets in $\mathbb{R}$ :
+    \[
+        \mathcal{O} \subseteq \sigma\Big( \big\{ ]a, b[ \big\} \Big) \implies \mathcal{B}(\mathbb{R}) = \sigma(\mathcal{O}) \subseteq \sigma\Big( \big\{ ]a, b[ \big\} \Big)
+    \]
+\end{enumerate}
+Combining both inclusions yields $\mathcal{B}(\mathbb{R}) = \sigma\big(\{]a, b[\}\big)$. \qed
+
+% =================================================================
+% EXERCISE 1.8: SIGMA-ALGEBRA GENERATED BY LEFT-SEMI-OPEN INTERVALS
+% =================================================================
+
+\begin{example}{Equivalence of Generators: $]a, b[$ vs $]-\infty, a]$}{gen_semi_open}
+We have the equivalence between the $\sigma$-algebras generated by bounded open intervals and left-closed ray intervals :
+\[
+    \sigma\Big( \big\{ ]a, b[ \;\mid\; a < b \big\} \Big) = \sigma\Big( \big\{ ]-\infty, a] \;\mid\; a \in \mathbb{R} \big\} \Big)
+\]
+\end{example}
+
+\paragraph{Methodology.} We establish both inclusions by constructing each set type using countable operations :
+
+\begin{enumerate}[label=\textbf{§}]
+    \item \textbf{First Step - Constructing $]-\infty, a]$ from $]a, b[$ :}
+    \begin{itemize}
+        \item We first construct the open ray $]-\infty, a[$ as a countable union of open intervals :
+        \[
+            ]-\infty, a[ \;=\; \bigcup_{n=1}^\infty ]-n, a[
+        \]
+        This countable union of elements in $\sigma\big(\{]a, b[\}\big)$ belongs to $\sigma\big(\{]a, b[\}\big)$.
+        
+        \item Next, we isolate the singleton $\{a\}$ as a countable intersection of open intervals :
+        \[
+            \{a\} \;=\; \bigcap_{n=1}^\infty \left] a - \frac{1}{n}, a + \frac{1}{n} \right[
+        \]
+        Thus, $\{a\} \in \sigma\big(\{]a, b[\}\big)$.
+    \end{itemize}
+    Combining these two sets via a finite union :
+    \[
+        ]-\infty, a] \;=\; ]-\infty, a[ \;\cup\; \{a\}
+    \]
+    Since both sets are in $\sigma\big(\{]a, b[\}\big)$, their union is as well. This proves :
+    \[
+        \sigma\Big( \big\{ ]-\infty, a] \big\} \Big) \subseteq \sigma\Big( \big\{ ]a, b[ \big\} \Big)
+    \]
+
+    \item \textbf{Second Step - Constructing $]a, b[$ from $]-\infty, a]$ :}
+    \begin{itemize}
+        \item Note that the left-semi-open interval $]a, b]$ can be expressed as a difference of two rays :
+        \[
+            ]a, b] \;=\; ]-\infty, b] \;\setminus\; ]-\infty, a] \;=\; ]-\infty, b] \;\cap\; \big( ]-\infty, a] \big)^c
+        \]
+        Since $\sigma\big(\{]-\infty, a]\}\big)$ is closed under complements and intersections, $]a, b] \in \sigma\big(\{]-\infty, a]\}\big)$.
+        
+        \item Now, we express the open interval $]a, b[$ as a countable union of semi-open intervals :
+        \[
+            ]a, b[ \;=\; \bigcup_{n=1}^\infty \left] a, b - \frac{1}{n} \right]
+        \]
+    \end{itemize}
+    Since this is a countable union of elements in $\sigma\big(\{]-\infty, a]\}\big)$, we obtain $]a, b[ \in \sigma\big(\{]-\infty, a]\}\big)$. This proves :
+    \[
+        \sigma\Big( \big\{ ]a, b[ \big\} \Big) \subseteq \sigma\Big( \big\{ ]-\infty, a] \big\} \Big)
+    \]
+\end{enumerate}
+
+Both building blocks have been successfully constructed with basic set operations and countable limits, completing the proof of equality. \qed
+
+% =================================================================
+% DEFINITION : PRODUCT SIGMA-ALGEBRA
+% =================================================================
+
+\begin{definition}{Product $\sigma$-Algebra}{product sigma_algebra}
+Let $(E_1, \mathcal{A}_1)$ and $(E_2, \mathcal{A}_2)$ be two measurable spaces. The \textbf{product $\sigma$-algebra} on the Cartesian product space $E_1 \times E_2$, denoted by $\mathcal{A}_1 \otimes \mathcal{A}_2$, is the $\sigma$-algebra generated by all measurable rectangles :
+\[
+    \mathcal{A}_1 \otimes \mathcal{A}_2 = \sigma\Big( \big\{ A_1 \times A_2 \;\mid\; A_1 \in \mathcal{A}_1,\, A_2 \in \mathcal{A}_2 \big\} \Big)
+\]
+\end{definition}
+
+\begin{insight}[Intuition - Measuring in Higher Dimensions]
+Suppose we know how to measure events in $E_1$ (e.g., stock prices) and in $E_2$ (e.g., interest rates). To build a unified model on the product space $E_1 \times E_2$ (such as the 2D plane $\mathbb{R}^2$), the simplest geometric building block is a "rectangle" of the form $A_1 \times A_2$.
+
+\textbf{Crucial Warning :} The set of all measurable rectangles $\{A_1 \times A_2 \mid A_1 \in \mathcal{A}_1, A_2 \in \mathcal{A}_2\}$ does \emph{not} form a $\sigma$-algebra on its own!
+
+\begin{itemize}
+    \item \textbf{Visual Proof - Unions :} The union of two crossed rectangles in the plane forms a cross-shaped region ($\mathbf{+}$), which is clearly not a single rectangle.
+    \item \textbf{Visual Proof - Complements :} The complement of a rectangle in the plane is not a rectangle either.
+\end{itemize}
+
+Since rectangles are not closed under basic set operations, they fail to form a $\sigma$-algebra. We must therefore \textbf{generate} the $\sigma$-algebra by taking the smallest $\sigma$-algebra containing all such measurable rectangles, leading directly to the definition $\mathcal{A}_1 \otimes \mathcal{A}_2 = \sigma(\{A_1 \times A_2\})$.
+\end{insight}
+\vspace{1em}
+% =================================================================
+% THEOREM 1.10 : MEASURABILITY OF CONTINUOUS MAPS
+% =================================================================
+
+\begin{theorem}{Borel Measurability Theorem}{borel measurability theorem}
+The preimage of a Borel set under a continuous map is a Borel set.
+\end{theorem}
+
+\begin{proof}
+Let $f \in \mathcal{C}^0(E, F)$ and $\mathcal{M} = \{ B \in \mathcal{B}(F) \mid f^{-1}(B) \in \mathcal{B}(E) \}$ be the collection of subsets of $F$ whose preimage under $f$ is measurable in $E$.
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Open sets containment :} Let $O \in \mathcal{O}_F$ be an open set in $F$. By continuity of $f$, the preimage $f^{-1}(O)$ is open in $E$. Since $\mathcal{B}(E)$ contains all open sets of $E$, we have $f^{-1}(O) \in \mathcal{B}(E)$, which means $\mathcal{O}_F \subseteq \mathcal{M}$.
+    \item \textbf{$\sigma$-Algebra structure :} The inverse image operation $f^{-1}$ preserves complements and countable unions. Thus, $\mathcal{M}$ forms a $\sigma$-algebra on $F$.
+\end{enumerate}
+Since $\mathcal{M}$ is a $\sigma$-algebra containing all open sets $\mathcal{O}_F$, it necessarily contains the smallest $\sigma$-algebra generated by them, i.e., $\mathcal{B}(F) = \sigma(\mathcal{O}_F) \subseteq \mathcal{M}$. Hence, $\mathcal{M} = \mathcal{B}(F)$, proving that the preimage of every Borel set is a Borel set.
+\end{proof}
+
+% =================================================================
+% EXAMPLE 1.11 : BOREL SIGMA-ALGEBRA ON R^2
+% =================================================================
+
+\begin{example}{Borel $\sigma$-Algebra on $\mathbb{R}^2$}{borel_r2_product}
+The 2D Borel $\sigma$-algebra on $\mathbb{R}^2$ coincides with the product of 1D Borel $\sigma$-algebras :
+\[
+    \mathcal{B}(\mathbb{R}^2) = \mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R})
+\]
+\end{example}
+\vspace{5em}
+\paragraph{Methodology - Proof by Double Inclusion.} We establish equality by proving both inclusions :
+
+\begin{enumerate}[label=\textbf{§}]
+    \item \textbf{First Inclusion - $\mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R}) \subseteq \mathcal{B}(\mathbb{R}^2)$ :}
+    Let $A, B \in \mathcal{B}(\mathbb{R})$. The rectangle $A \times B \subseteq \mathbb{R}^2$ can be expressed as the intersection of two infinite strips :
+    \[
+        A \times B = (A \times \mathbb{R}) \cap (\mathbb{R} \times B)
+    \]
+    Consider the canonical projection maps :
+    \[
+        \pi_1 : \mathbb{R}^2 \to \mathbb{R}, \quad (x, y) \mapsto x, \qquad \text{and} \qquad \pi_2 : \mathbb{R}^2 \to \mathbb{R}, \quad (x, y) \mapsto y
+    \]
+    Both projections are continuous. By the Borel measurability theorem above, $\pi_1$ and $\pi_2$ are $(\mathcal{B}(\mathbb{R}^2), \mathcal{B}(\mathbb{R}))$-measurable. Thus :
+    \[
+        A \times \mathbb{R} = \pi_1^{-1}(A) \in \mathcal{B}(\mathbb{R}^2) \qquad \text{and} \qquad \mathbb{R} \times B = \pi_2^{-1}(B) \in \mathcal{B}(\mathbb{R}^2)
+    \]
+    Since $\mathcal{B}(\mathbb{R}^2)$ is closed under finite intersections, the rectangle $A \times B = \pi_1^{-1}(A) \cap \pi_2^{-1}(B)$ belongs to $\mathcal{B}(\mathbb{R}^2)$. As $\mathcal{B}(\mathbb{R}^2)$ contains all measurable rectangles, it contains the generated product $\sigma$-algebra :
+    \[
+        \mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R}) \subseteq \mathcal{B}(\mathbb{R}^2)
+    \]
+
+    \item \textbf{Second Inclusion - $\mathcal{B}(\mathbb{R}^2) \subseteq \mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R})$ :}
+    Recall that $\mathcal{B}(\mathbb{R}^2)$ is generated by the open sets of $\mathbb{R}^2$. It suffices to show that any open set $U \subseteq \mathbb{R}^2$ belongs to $\mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R})$.
+    
+    A standard topological result states that every open set $U \subseteq \mathbb{R}^2$ can be written as an at most countable union of open rectangles with rational endpoints:
+    \[
+        U = \bigcup_{n \in \mathbb{N}} \big( ]q_{1,n}, q_{2,n}[ \times ]q_{3,n}, q_{4,n}[ \big), \qquad \text{with } q_{i,n} \in \mathbb{Q}
+    \]
+    Each open interval $]q_1, q_2[$ is in $\mathcal{B}(\mathbb{R})$, so each open rectangle belongs to the product generator set. Since $\mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R})$ is closed under countable unions, it contains $U$. Thus :
+    \[
+        \mathcal{B}(\mathbb{R}^2) \subseteq \mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R})
+    \]
+\end{enumerate}
+
+Combining both inclusions completes the proof : $\mathcal{B}(\mathbb{R}^2) = \mathcal{B}(\mathbb{R}) \otimes \mathcal{B}(\mathbb{R})$. \qed
+
+\newpage
+\section{Positive Measures}
+
+\vspace{1em}
+% =================================================================
+% DEFINITION 1.12 :POSITIVE MEASURE
+% =================================================================
+
+\begin{definition}{Positive Measure}{positive measure}
+Let $(E, \mathcal{A})$ be a measurable space. A \textbf{positive measure} on $(E, \mathcal{A})$ is a function :
+\[
+    \mu : \mathcal{A} \to [0, +\infty]
+\]
+satisfying the following two properties :
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Null Empty Set :} The measure of the empty set is zero :
+    \[
+        \mu(\emptyset) = 0
+    \]
+    \item \textbf{$\sigma$-Additivity :} For any pairwise disjoint family of measurable sets $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ (i.e. $A_i \cap A_j = \emptyset$ for all $i \neq j$) :
+    \[
+        \mu\left( \bigcup_{n \in \mathbb{N}} A_n \right) = \sum_{n=0}^\infty \mu(A_n)
+    \]
+\end{enumerate}
+\end{definition}
+
+\begin{insight}[Intuition - Scale and Area Decomposition]
+In plain terms, a measure acts simply as a "scale" or a "graduated ruler". 
+\begin{itemize}
+    \item Measuring nothing yields nothing.
+    \item Furthermore, if a piece of land is partitioned into a countable infinity of strictly disjoint sub-plots, the total area of the land equals the infinite sum of the individual sub-plot areas.
+\end{itemize}
+\end{insight}
+
+% =================================================================
+% PROPERTY 1.2.1 : IMMEDIATE PROPERTIES OF POSITIVE MEASURES
+% =================================================================
+
+\begin{property}[breakable]{Fundamental Properties of Positive Measures}{measure_properties}
+Let $(E, \mathcal{A})$ be a measurable space and let $\mu : \mathcal{A} \to [0, +\infty]$ be a positive measure. The following properties hold :
+\begin{enumerate}
+    \item \textbf{Monotonicity and Subtraction :} If $A, B \in \mathcal{A}$ with $A \subseteq B$, then :
+    \[
+        \mu(A) \le \mu(B)
+    \]
+    If, in addition, $\mu(A) < +\infty$, then :
+    \[
+        \mu(B \setminus A) = \mu(B) - \mu(A)
+    \]
+    \item \textbf{Inclusion-Exclusion Principle (Poincaré's Formula) :} For any $A, B \in \mathcal{A}$ :
+    \[
+        \mu(A) + \mu(B) = \mu(A \cup B) + \mu(A \cap B)
+    \]
+    \item \textbf{Continuity from Below (Increasing Sequences) :} If $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ is an increasing sequence of measurable sets ($A_n \subseteq A_{n+1}$ for all $n$), then :
+    \[
+        \mu\left( \bigcup_{n \in \mathbb{N}} A_n \right) = \lim_{n \to \infty} \mu(A_n)
+    \]
+    \item \textbf{Continuity from Above (Decreasing Sequences) :} If $(B_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ is a decreasing sequence of measurable sets ($B_{n+1} \subseteq B_n$ for all $n$) and $\mu(B_0) < +\infty$, then :
+    \[
+        \mu\left( \bigcap_{n \in \mathbb{N}} B_n \right) = \lim_{n \to \infty} \mu(B_n)
+    \]
+    \item \textbf{Countable Sub-additivity :} For any sequence of measurable sets $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ (not necessarily disjoint) :
+    \[
+        \mu\left( \bigcup_{n \in \mathbb{N}} A_n \right) \le \sum_{n=0}^\infty \mu(A_n)
+    \]
+\end{enumerate}
+\end{property}
+
+\begin{proof}
+We establish each property using the axioms of a positive measure :
+
+\begin{enumerate}
+    \item \textbf{Monotonicity and Subtraction :}
+    Since $A \subseteq B$, we decompose $B$ into a disjoint union : $B = A \cup (B \setminus A)$. By finite additivity :
+    \[
+        \mu(B) = \mu(A) + \mu(B \setminus A)
+    \]
+    Since $\mu$ takes values in $[0, +\infty]$, $\mu(B \setminus A) \ge 0$, which yields $\mu(B) \ge \mu(A)$. 
+    If $\mu(A) < +\infty$, subtracting $\mu(A)$ from both sides gives $\mu(B \setminus A) = \mu(B) - \mu(A)$. 
+
+    \item \textbf{Inclusion-Exclusion Formula :}
+    We express $A \cup B$ and $B$ using disjoint unions :
+    \[
+        A \cup B = A \cup (B \setminus A) \implies \mu(A \cup B) = \mu(A) + \mu(B \setminus A)
+    \]
+    \[
+        B = (A \cap B) \cup (B \setminus A) \implies \mu(B) = \mu(A \cap B) + \mu(B \setminus A)
+    \]
+    Substituting $\mu(B \setminus A) = \mu(B) - \mu(A \cap B)$ into the first identity yields :
+    \[
+        \mu(A \cup B) = \mu(A) + \mu(B) - \mu(A \cap B) \implies \mu(A) + \mu(B) = \mu(A \cup B) + \mu(A \cap B)
+    \]
+
+    \item \textbf{Continuity from Below :}
+    To apply $\sigma$-additivity, we construct a pairwise disjoint sequence $(C_n)_{n \in \mathbb{N}}$ 
+    \[
+        C_0 = A_0, \qquad  \forall n \ge 1, \quad C_n = A_n \setminus A_{n-1} 
+    \]
+    By construction, the $C_n$ are disjoint and $\bigcup_{n \in \mathbb{N}} A_n = \bigcup_{n \in \mathbb{N}} C_n$, with $\bigcup_{k=0}^n C_k = A_n$ for every $n$. By $\sigma$-additivity :
+    \[
+        \mu\left( \bigcup_{n \in \mathbb{N}} A_n \right) = \mu\left( \bigcup_{n \in \mathbb{N}} C_n \right) = \sum_{n=0}^\infty \mu(C_n) = \lim_{N \to \infty} \sum_{n=0}^N \mu(C_n) = \lim_{N \to \infty} \mu(A_N)
+    \]
+
+    \item \textbf{Continuity from Above :}
+    Define $A_n = B_0 \setminus B_n$ for all $n \in \mathbb{N}$. Since $(B_n)_{n \in \mathbb{N}}$ is decreasing, $(A_n)_{n \in \mathbb{N}}$ is an increasing sequence of measurable sets with $\bigcup_{n \in \mathbb{N}} A_n = B_0 \setminus \left( \bigcap_{n \in \mathbb{N}} B_n \right)$.
+    Applying continuity from below to $(A_n)_{n \in \mathbb{N}}$ :
+    \[
+        \mu\left( B_0 \setminus \bigcap_{n \in \mathbb{N}} B_n \right) = \lim_{n \to \infty} \mu(A_n) = \lim_{n \to \infty} \mu(B_0 \setminus B_n)
+    \]
+    Since $\mu(B_0) < +\infty$, we use property (i) to write $\mu(B_0 \setminus B_n) = \mu(B_0) - \mu(B_n)$ and $\mu\left( B_0 \setminus \bigcap B_n \right) = \mu(B_0) - \mu\left( \bigcap B_n \right)$. Subtracting $\mu(B_0)$ gives :
+    \[
+        \mu\left( \bigcap_{n \in \mathbb{N}} B_n \right) = \lim_{n \to \infty} \mu(B_n)
+    \]
+
+    \item \textbf{Countable Sub-additivity :}
+    We make the sequence disjoint by setting $C_0 = A_0$ and $C_n = A_n \setminus \left( \bigcup_{k=0}^{n-1} A_k \right)$ for $n \ge 1$.
+    The $(C_n)_{n \in \mathbb{N}}$ are disjoint, $C_n \subseteq A_n$ for all $n$, and $\bigcup_{n \in \mathbb{N}} A_n = \bigcup_{n \in \mathbb{N}} C_n$.
+    By $\sigma$-additivity and monotonicity :
+    \[
+        \mu\left( \bigcup_{n \in \mathbb{N}} A_n \right) = \mu\left( \bigcup_{n \in \mathbb{N}} C_n \right) = \sum_{n=0}^\infty \mu(C_n) \le \sum_{n=0}^\infty \mu(A_n)
+    \]
+\end{enumerate}
+\end{proof}
+
+% =================================================================
+% EXAMPLE 1.13 : COUNTING MEASURE
+% =================================================================
+
+\begin{example}{The Counting Measure}{counting_measure}
+Let $E$ be a non-empty set and let $\mathcal{A} = \mathcal{P}(E)$. The \textbf{counting measure} is the function \newline $\mu : \mathcal{P}(E) \to [0, +\infty]$ defined for any subset $A \subseteq E$ by :
+\[
+    \mu(A) = \operatorname{Card}(A) = 
+    \begin{cases}
+        n & \text{if } A \text{ is a finite set with } n \text{ elements} \\
+        +\infty & \text{if } A \text{ is infinite}
+    \end{cases}
+\]
+\end{example}
+
+\paragraph{Verification.}
+We verify the two axioms of a positive measure :
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Null Empty Set :} By definition of cardinality, $\mu(\emptyset) = \operatorname{Card}(\emptyset) = 0$.
+    \item \textbf{$\sigma$-Additivity :} Let $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{P}(E)$ be a sequence of pairwise disjoint subsets.
+    \begin{itemize}
+        \item If at least one of the $A_n$ is infinite, then the union $\bigcup_{n \in \mathbb{N}} A_n$ is also infinite. Thus :
+        \[
+            \operatorname{Card}\left( \bigcup_{n \in \mathbb{N}} A_n \right) = +\infty = \sum_{n=0}^\infty \operatorname{Card}(A_n)
+        \]
+        \item If infinitely many $A_n$ are non-empty, the union contains infinitely many disjoint elements, so :
+        \[
+            \operatorname{Card}\left( \bigcup_{n \in \mathbb{N}} A_n \right) = +\infty = \sum_{n=0}^\infty \operatorname{Card}(A_n)
+        \]
+        \item If only a finite number $k$ of the $A_n$ are non-empty and all are finite, the property follows directly from the finite additivity of cardinality for disjoint sets :
+        \[
+            \operatorname{Card}\left( \bigcup_{n \in \mathbb{N}} A_n \right) = \sum_{n=0}^k \operatorname{Card}(A_n) = \sum_{n=0}^\infty \operatorname{Card}(A_n)
+        \]
+    \end{itemize}
+    Hence, $\mu$ is $\sigma$-additive.
+\end{enumerate}
+\qed
+
+\vspace{1.2em}
+
+% =================================================================
+% EXAMPLE 1.14 : DIRAC MEASURE & LINEAR COMBINATIONS
+% =================================================================
+
+\begin{example}{The Dirac Measure and Linear Combinations}{dirac_measure}
+Let $(E, \mathcal{A})$ be a measurable space and let $x \in E$ be a fixed point. The \textbf{Dirac measure} centered at $x$, denoted by $\delta_x$, is defined for any $A \in \mathcal{A}$ by :
+\[
+    \delta_x(A) = \mathbf{1}_A(x) = 
+    \begin{cases}
+        1 & \text{if } x \in A \\
+        0 & \text{if } x \notin A
+    \end{cases}
+\]
+More generally, given a sequence of points $(x_n)_{n \in \mathbb{N}} \subseteq E$ and non-negative coefficients $(\alpha_n)_{n \in \mathbb{N}} \subseteq [0, +\infty]$, the map :
+\[
+    \mu(A) = \sum_{n=0}^\infty \alpha_n \delta_{x_n}(A) = \sum_{n=0}^\infty \alpha_n \mathbf{1}_A(x_n)
+\]
+defines a valid positive measure on $(E, \mathcal{A})$ via stability under positive linear combinations and pointwise limits.
+\end{example}
+
+\paragraph{Verification for the Dirac Measure.}
+We check the two axioms for $\delta_x$ :
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Null Empty Set:} Since $x \notin \emptyset$, we have $\delta_x(\emptyset) = 0$.
+    \item \textbf{$\sigma$-Additivity:} Let $(A_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ be a sequence of pairwise disjoint measurable sets.
+    \begin{itemize}
+        \item If $x \in \bigcup_{n \in \mathbb{N}} A_n$, since the sets are disjoint, there exists a unique index $k \in \mathbb{N}$ such that $x \in A_k$. Thus :
+        \[
+            \delta_x\left( \bigcup_{n \in \mathbb{N}} A_n \right) = 1 \qquad \text{and} \qquad \sum_{n=0}^\infty \delta_x(A_n) = \delta_x(A_k) = 1
+        \]
+        \item If $x \notin \bigcup_{n \in \mathbb{N}} A_n$, then $x \notin A_n$ for all $n \in \mathbb{N}$. Both sides evaluate to $0$ :
+        \[
+            \delta_x\left( \bigcup_{n \in \mathbb{N}} A_n \right) = 0 = \sum_{n=0}^\infty \delta_x(A_n)
+        \]
+    \end{itemize}
+    Thus, $\delta_x$ is a positive measure.
+\end{enumerate}
+\qed
+
+\vspace{1.2em}
+
+% =================================================================
+% EXAMPLE 1.15 : LEBESGUE MEASURE ON R
+% =================================================================
+
+\begin{example}{The Lebesgue Measure on $\mathbb{R}$ (Admitted for now)}{lebesgue_measure}
+There exists a unique positive measure on $(\mathbb{R}, \mathcal{B}(\mathbb{R}))$, denoted by $\lambda$, such that for every open interval $]a, b[$ with $a \le b$ :
+\[
+    \lambda(]a, b[) = b - a
+\]
+The Lebesgue measure $\lambda$ provides the rigorous mathematical formalization of the intuitive notion of "length" in $\mathbb{R}$.
+\end{example}
+
+
+% =================================================================
+% DEFINITIONS: FINITE, PROBABILITY, AND SIGMA-FINITE MEASURES
+% =================================================================
+
+\begin{definition}{Finite Measure}{finite measure}
+A positive measure $\mu$ on $(E, \mathcal{A})$ is said to be \textbf{finite} if the total mass of the space is finite :
+\[
+    \mu(E) < +\infty
+\]
+\end{definition}
+
+\begin{definition}{Probability Measure}{probability measure}
+A positive measure $\mu$ on $(E, \mathcal{A})$ is called a \textbf{probability measure} if the total mass of the space equals one :
+\[
+    \mu(E) = 1
+\]
+In probability theory, the state space $E$ is standardly denoted by $\Omega$, the $\sigma$-algebra $\mathcal{A}$ by $\mathcal{F}$, and the probability measure $\mu$ by $\mathbb{P}$.
+\end{definition}
+
+\begin{definition}{$\sigma$-Finite Measure}{sigma-finite measure}
+A positive measure $\mu$ on $(E, \mathcal{A})$ is said to be \textbf{$\sigma$-finite} if there exists an increasing sequence of measurable sets $(E_n)_{n \in \mathbb{N}} \subseteq \mathcal{A}$ such that :
+\[
+    E = \bigcup_{n \in \mathbb{N}} E_n \qquad \text{and} \qquad \forall n \in \mathbb{N}, \quad \mu(E_n) < +\infty
+\]
+\end{definition}
+
+\begin{insight}[Intuition - $\sigma$-Finite vs. Finite]
+In plain terms, a space is $\sigma$-finite if it can be decomposed into countably many pieces of finite size. Note that $\sigma$-finite \textbf{does not imply} finite ($\sigma\text{-finite} \neq \text{finite}$).
+\newline
+\\
+\textbf{Classic Example :} The Lebesgue measure $\lambda$ on $\mathbb{R}$ is not finite since $\lambda(\mathbb{R}) = +\infty$. However, setting $E_n = [-n, n]$ gives an increasing sequence of measurable sets such that $\bigcup_{n \in \mathbb{N}} E_n = \mathbb{R}$ and $\lambda(E_n) = 2n < +\infty$ for all $n \in \mathbb{N}$. Thus, $\lambda$ is $\sigma$-finite.
+\end{insight}
+
+% =================================================================
+% DEFINITIONS: ATOMS AND DIFFUSE MEASURES
+% =================================================================
+
+\begin{definition}{Atom}{atom}
+Let $(E, \mathcal{A})$ be a measurable space equipped with a positive measure $\mu$ such that singletons $\{x\} \in \mathcal{A}$ for all $x \in E$. A point $x \in E$ is called an \textbf{atom} of $\mu$ if its individual measure is strictly positive :
+\[
+    \mu(\{x\}) > 0
+\]
+\end{definition}
+
+\begin{definition}{Diffuse Measure}{diffuse measure}
+A positive measure $\mu$ on $(E, \mathcal{A})$ is said to be \textbf{diffuse} (or non-atomic) if it possesses no atoms :
+\[
+    \forall x \in E, \quad \mu(\{x\}) = 0
+\]
+\end{definition}
+
+\section{Measurable Functions}
+
+% =================================================================
+% DEFINITION III: MEASURABLE FUNCTIONS
+% =================================================================
+\vspace{1em}
+
+\begin{definition}{Measurable Function}{measurable function}
+Let $(E, \mathcal{A})$ and $(F, \mathcal{B})$ be two measurable spaces. A function $f : E \to F$ is said to be \textbf{$(\mathcal{A}, \mathcal{B})$-measurable} (or simply \textbf{measurable}) if the preimage of every measurable set in $F$ is measurable in $E$:
+\[
+    \forall B \in \mathcal{B}, \quad f^{-1}(B) \in \mathcal{A}
+\]
+When $E$ and $F$ are topological spaces equipped with their respective Borel $\sigma$-algebras $\mathcal{B}(E)$ and $\mathcal{B}(F)$, a $(\mathcal{B}(E), \mathcal{B}(F))$-measurable function is also called a \textbf{Borel function} (or \textbf{Borelian}).
+\end{definition}
+
+% =================================================================
+% PROPOSITION 1.22 : STABILITY UNDER COMPOSITION
+% =================================================================
+
+\begin{proposition}{Stability under Composition}{meas_composition}
+The composition of two measurable functions is measurable.
+\end{proposition}
+
+\paragraph{Proof.}
+Let $(E, \mathcal{A})$, $(F, \mathcal{B})$, and $(G, \mathcal{C})$ be three measurable spaces.
+Let $f : E \to F$ be $(\mathcal{A}, \mathcal{B})$-measurable and $g : F \to G$ be $(\mathcal{B}, \mathcal{C})$-measurable.
+
+Let $N \in \mathcal{C}$. By standard properties of preimages :
+\[
+    (g \circ f)^{-1}(N) = f^{-1}\big(g^{-1}(N)\big)
+\]
+Since $g$ is measurable, $M = g^{-1}(N) \in \mathcal{B}$.
+Furthermore, since $f$ is measurable and $M \in \mathcal{B}$, we have $f^{-1}(M) \in \mathcal{A}$.
+Thus, $(g \circ f)^{-1}(N) = f^{-1}(M) \in \mathcal{A}$, which proves that $g \circ f$ is $(\mathcal{A}, \mathcal{C})$-measurable. \qed
+
+\vspace{1.2em}
+
+% =================================================================
+% PROPOSITION 1.23 : SUFFICIENT CONDITION FOR MEASURABILITY
+% =================================================================
+
+\begin{proposition}{Sufficient Condition for Measurability}{meas_sufficient_condition}
+Let $(E, \mathcal{A})$ and $(F, \mathcal{B})$ be two measurable spaces. For a function $f : E \to F$ to be measurable, it suffices that there exists a generating collection $\mathcal{C} \subseteq \mathcal{B}$ such that $\sigma(\mathcal{C}) = \mathcal{B}$ and :
+\[
+    \forall B \in \mathcal{C}, \quad f^{-1}(B) \in \mathcal{A}
+\]
+\end{proposition}
+
+\paragraph{Proof.}
+Define the collection of sets in $F$ whose preimage under $f$ is measurable in $E$:
+\[
+    \mathcal{G} = \{ B \in \mathcal{B} \mid f^{-1}(B) \in \mathcal{A} \}
+\]
+It is straightforward to verify that $\mathcal{G}$ forms a $\sigma$-algebra on $F$ (since the preimage operation preserves complements and countable unions).
+
+By assumption, $\mathcal{C} \subseteq \mathcal{G}$. Since $\mathcal{G}$ is a $\sigma$-algebra containing $\mathcal{C}$, it must contain the smallest $\sigma$-algebra generated by $\mathcal{C}$, which means:
+\[
+    \mathcal{B} = \sigma(\mathcal{C}) \subseteq \mathcal{G}
+\]
+Since $\mathcal{G} \subseteq \mathcal{B}$ by construction, we obtain $\mathcal{G} = \mathcal{B}$. Therefore, for every $B \in \mathcal{B}$, $f^{-1}(B) \in \mathcal{A}$, establishing that $f$ is measurable. \qed
+
+% =================================================================
+% EXAMPLE 1.24 : REAL-VALUED FUNCTIONS MEASURABILITY
+% =================================================================
+
+\begin{example}{Measurability of Real-Valued Functions}{meas_real_valued}
+Let $(E, \mathcal{A})$ be a measurable space and let $(\mathbb{R}, \mathcal{B}(\mathbb{R}))$ be the real line equipped with its Borel $\sigma$-algebra. A function $f : E \to \mathbb{R}$ is $(\mathcal{A}, \mathcal{B}(\mathbb{R}))$-measurable if and only if for every open interval $]a, b[$ (with $a, b \in \mathbb{R}, a < b$) :
+\[
+    f^{-1}\big(]a, b[\big) \in \mathcal{A}
+\]
+\end{example}
+
+\paragraph{Proof.}
+Recall that $\mathcal{B}(\mathbb{R}) = \sigma(\mathcal{C}_1)$ where $\mathcal{C}_1 = \{ ]a, b[ \mid a, b \in \mathbb{R}, a < b \}$.
+Using the sufficient condition for measurability established in the previous proposition, it suffices to verify the preimage condition on the generating collection $\mathcal{C}_1$.
+
+Since $f^{-1}\big(]a, b[\big) \in \mathcal{A}$ for every generator $]a, b[ \in \mathcal{C}_1$, it follows directly that $f$ is $(\mathcal{A}, \mathcal{B}(\mathbb{R}))$-measurable. \qed
+
+\vspace{1.2em}
+
+% =================================================================
+% EXAMPLE 1.25 : CONTINUOUS FUNCTIONS ARE BORELIAN
+% =================================================================
+
+\begin{example}{Continuous Functions are Borelian}{continuous_are_borelian}
+Let $(E, \mathcal{O}_E)$ and $(F, \mathcal{O}_F)$ be two topological spaces equipped with their Borel $\sigma$-algebras $\mathcal{B}(E) = \sigma(\mathcal{O}_E)$ and $\mathcal{B}(F) = \sigma(\mathcal{O}_F)$. Any continuous function $f : E \to F$ is $(\mathcal{B}(E), \mathcal{B}(F))$-measurable.
+\end{example}
+
+\paragraph{Proof.}
+Let $\mathcal{C} = \mathcal{O}_F$ be the collection of open sets in $F$, which generates $\mathcal{B}(F)$, i.e. $\sigma(\mathcal{C}) = \mathcal{B}(F)$.
+
+Let $V \in \mathcal{C}$ be an open set in $F$. Since $f$ is continuous, the preimage $f^{-1}(V)$ is an open set in $E$, which means :
+\[
+    f^{-1}(V) \in \mathcal{O}_E \subseteq \mathcal{B}(E)
+\]
+Thus, for every $V \in \mathcal{C}$, we have $f^{-1}(V) \in \mathcal{B}(E)$.
+
+By the sufficient condition for measurability applied to the generating class $\mathcal{C} = \mathcal{O}_F$, we conclude that $f$ is $(\mathcal{B}(E), \mathcal{B}(F))$-measurable. \qed
+
+
+\begin{insight}[Intuition]
+Intuitively, since the preimage of an open set under a continuous function is open, and the Borel $\sigma$-algebra is generated by open sets, measurability follows immediately.
+\end{insight}
