@@ -95,7 +95,7 @@
     after skip=3em
 }{ex}
 
-% --- Property / Proposition Box (Teal / Sapphire Blue) ---
+% 6. Property / Proposition Box (Teal / Sapphire Blue) ---
 \newtcbtheorem[number within=section]{property}{Property}{
     quantbox,
     colback=teal!4!white,
@@ -105,6 +105,16 @@
     before skip=3em,
     after skip=3em
 }{prop}
+
+% 7. Corollary 
+\newtcbtheorem[number within=section]{corollary}{Corollary}{
+    quantbox,
+    colback=cyan!5!white,      % Fond très léger bleu clair/cyan
+    colframe=cyan!60!black,    % Bordure et titre bleu clair soutenu
+    coltitle=white,
+    fonttitle=\bfseries,
+    after skip=1.2em
+}{cor}
 
 % Environnement Remark discret
 \tcbset{
